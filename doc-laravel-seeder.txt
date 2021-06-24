@@ -1,3 +1,9 @@
+0 in model hasFactory use 
+
+protected $fillable = [
+        'customer_name', 'address', 'city', 'email', 'postal_code', 'country', 'phone'
+    ];
+
 1,      First 
 
 php artisan make:seeder CustomerSeeder
