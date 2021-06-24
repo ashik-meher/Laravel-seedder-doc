@@ -1,0 +1,8 @@
+use Illuminate\Pagination\Paginator;
+
+public function boot()
+{
+    Paginator::defaultView('view-name');
+
+    Paginator::defaultSimpleView('view-name');
+}
