@@ -1,0 +1,124 @@
+1,      First 
+
+php artisan make:seeder CustomerSeeder
+
+then https://welcm.uk/blog/getting-started-with-faker-in-laravel
+
+php artisan make:factory CustomerFactory --model="App\\Customer"
+--------------------------------------------------------------------------------
+
+2.     then
+
+php artisan db:seed --class=UsersTableSeeder
+----------------------------------------------------------------------------
+but before
+
+35 REF:https://stackoverflow.com/questions/63816395/laravel-call-to-undefined-function-database-seeders-factory
+
+In laravel 8 the default route namespace was removed.
+
+Try to change:
+
+ArticlesTableSeeder.php:
+
+ factory(App\Models\Article::class, 30)->create();
+to:
+
+\App\Models\Article::factory()->count(30)->create(); 
+ArticleFactory.php:
+
+protected $model = App\Models\Article::class;
+to:
+
+protected $model = \App\Models\Article::class;
+
+and you will probably have to change:
+
+ 'title' => $faker->text(50),
+            'body' => $faker->text(200)
+to:
+
+ 'title' => $this->faker->text(50),
+        'body' => $this->faker->text(200)
+       
+
+================================================================= my customer factory
+
+<?php
+
+namespace Database\Factories;
+
+use App\Models\Customer;
+use Illuminate\Database\Eloquent\Factories\Factory;
+
+class CustomerFactory extends Factory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    //protected $model = Customer::class;
+    protected $model = \App\Models\Customer::class;
+
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition()
+
+    
+    {
+        return [
+            //
+
+            'customer_name' => $this->faker->name,
+            'address'=> $this->faker->address, 
+            'city'=>$this->faker->city,
+            'email'=>$this->faker->unique()->safeEmail,
+            'postal_code'=>$this->faker->postcode,
+            'country'=>$this->faker->country, 
+            'phone' => $this->faker->phoneNumber,
+        ];
+    }
+};
+/*
+cityPrefix                          // 'Lake'
+secondaryAddress                    // 'Suite 961'
+state                               // 'NewMexico'
+stateAbbr                           // 'OH'
+citySuffix                          // 'borough'
+streetSuffix                        // 'Keys'
+buildingNumber                      // '484'
+city                                // 'West Judge'
+streetName                          // 'Keegan Trail'
+streetAddress                       // '439 Karley Loaf Suite 897'
+postcode                            // '17916'
+address                             // '8888 Cummings Vista Apt. 101, Susanbury, NY 95473'
+country                             // 'Falkland Islands (Malvinas)'
+latitude($min = -90, $max = 90)     // 77.147489
+longitude($min = -180, $max = 180)  // 86.211205*/
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ my customer seeder
+
+<?php
+
+namespace Database\Seeders;
+
+use Illuminate\Database\Seeder;
+
+class CustomerSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        //
+
+        \App\Models\Customer::factory()->count(100)->create();
+    }
+}
